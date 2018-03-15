@@ -44,3 +44,5 @@ This will populate the topic 'suspicious-names-json'
 
 7. Now use a window to determine when the breach occurs (i.e. > 1 in the window)
 > KSQL> CREATE TABLE suspicious_events AS SELECT username as user_id, COUNT(*) AS txn_count FROM suspicious_txns WINDOW TUMBLING (size 24 hours) GROUP BY name HAVING COUNT(*) > 1;;
+
+Note: use a regular kafka_consumer to detect events on the underlying topic: 'suspicious_events'
