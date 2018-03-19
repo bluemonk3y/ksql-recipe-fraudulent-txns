@@ -1,4 +1,4 @@
-#Fraud detection
+# Fraud detection
 
 A simple KSQL recipe that detects when an unexpected txn occurs against a known suspicious recipient that is 'new' to the user account. The idea being that fraudsters will be trying to blend their transactiosn into the account in order to go un-noticed. They will use a well known set of companies in the hope that you already transact with them.
 
@@ -55,7 +55,7 @@ To run this recipe:
 
 Note: you can use a regular kafka_consumer to detect events on the underlying topic: 'suspicious_events'
 
-#Enrich Streams with static JSON file loaded as a TABLE
+# Enrich Streams with static JSON file loaded as a TABLE
 
 1. load the valid names as a Table
 > $ ./load-valid-accounts.sh
