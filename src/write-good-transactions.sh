@@ -15,12 +15,13 @@ while [  $COUNTER -lt 10 ]; do
     do
         for NAME in "${NAMES[@]}"
         do
-            MSG="{\"txn_id\":$TXN_ID,\"username\":\"$NAME\",\"recipient\":\"$RECIPIENT\", \"amount\":$((RANDOM % 100))}"
-            $CONFLUENT_HOME/bin/kafka-console-producer --broker-list localhost:9092 --topic txns-1  <<< $MSG
+            # Set the key to ensure the detault partition assigner sends the records to the same partition
+            MSG="$TXN_ID:{\"txn_id\":$TXN_ID,\"username\":\"$NAME\",\"recipient\":\"$RECIPIENT\", \"amount\":$((RANDOM % 100))}"
+            $CONFLUENT_HOME/bin/kafka-console-producer --broker-list localhost:9092 --topic txns-1 --property "parse.key=true" --property "key.separator=:" <<< $MSG
             echo $MSG
             let TXN_ID=TXN_ID+1
-            sleep 1
         done
     done
+    sleep 1
  let COUNTER=COUNTER+1
 done
