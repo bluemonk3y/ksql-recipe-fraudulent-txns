@@ -65,16 +65,16 @@ Note: you can use a regular kafka_consumer to detect events on the underlying to
 
 2) Load the file into a Kafka topic using a bash script.
 
-**!/usr/bin/env bash**
-$CONFLUENT_HOME/bin/kafka-console-producer --broker-list localhost:9092 --topic accounts-json --property "parse.key=true" --property "key.separator=:" < resources/valid-accounts.json
+> !/usr/bin/env bash
+> $CONFLUENT_HOME/bin/kafka-console-producer --broker-list localhost:9092 --topic accounts-json --property "parse.key=true" --property "key.separator=:" < resources/valid-accounts.json
 
 3) Create  KSQL table over the topic valid-accounts-json
 
-CREATE TABLE valid_accounts (key long, username varchar, created_date varchar) with (key=key, kafka_topic = 'accounts-json', value_format = 'json');
+> KSQL> CREATE TABLE valid_accounts (key long, username varchar, created_date varchar) with (key=key, kafka_topic = 'accounts-json', value_format = 'json');
 
 4) Create a KSQL Stream called ‘txns’ on top of the kafka topic ‘txns-1’
 
-CREATE STREAM txns (txn_id long, userid long long, recipient long, amount double) with (kafka_topic = 'txns-1', value_format = 'json');
+> KSQL> CREATE STREAM txns (txn_id long, userid long long, recipient long, amount double) with (kafka_topic = 'txns-1', value_format = 'json');
 
 4.5) Run the txns generator
 > $ ./write-good-transactions.sh
@@ -83,4 +83,3 @@ CREATE STREAM txns (txn_id long, userid long long, recipient long, amount double
 
 > KSQL> CREATE STREAM enriched_txns AS SELECT txn_id, userid, username, recipient FROM txns LEFT JOIN accounts-json ON txns.user_id = accounts-json.key WHERE company_name is not null;
 
-6) For a complete solution see: https://github.com/bluemonk3y/ksql-recipe-fraudulent-txns
